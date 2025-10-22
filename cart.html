@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iTechSolution - Cart</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="logo">iTechSolution</div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="products.html">Products</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="cart.html">Cart (<span id="cart-count">0</span>)</a></li>
+                <li id="admin-link" style="display: none;"><a href="admin.html">Admin</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="cart-section">
+        <h2>Your Cart</h2>
+        <div class="shipping-selection">
+            <label for="shipping-location">Shipping Location:</label>
+            <select id="shipping-location">
+                <option value="andhra-pradesh">Andhra Pradesh (₹300)</option>
+                <option value="arunachal-pradesh">Arunachal Pradesh (₹300)</option>
+                <option value="assam">Assam (₹300)</option>
+                <option value="bihar">Bihar (₹300)</option>
+                <option value="chhattisgarh">Chhattisgarh (₹300)</option>
+                <option value="goa">Goa (₹200)</option>
+                <option value="gujarat">Gujarat (₹300)</option>
+                <option value="haryana">Haryana (₹300)</option>
+                <option value="himachal-pradesh">Himachal Pradesh (₹300)</option>
+                <option value="jharkhand">Jharkhand (₹300)</option>
+                <option value="karnataka">Karnataka (₹300)</option>
+                <option value="kerala">Kerala (₹300)</option>
+                <option value="madhya-pradesh">Madhya Pradesh (₹300)</option>
+                <option value="maharashtra">Maharashtra (₹300)</option>
+                <option value="manipur">Manipur (₹300)</option>
+                <option value="meghalaya">Meghalaya (₹300)</option>
+                <option value="mizoram">Mizoram (₹300)</option>
+                <option value="nagaland">Nagaland (₹300)</option>
+                <option value="odisha">Odisha (₹300)</option>
+                <option value="punjab">Punjab (₹300)</option>
+                <option value="rajasthan">Rajasthan (₹300)</option>
+                <option value="sikkim">Sikkim (₹300)</option>
+                <option value="tamil-nadu">Tamil Nadu (₹300)</option>
+                <option value="telangana">Telangana (₹300)</option>
+                <option value="tripura">Tripura (₹300)</option>
+                <option value="uttar-pradesh">Uttar Pradesh (₹300)</option>
+                <option value="uttarakhand">Uttarakhand (₹300)</option>
+                <option value="west-bengal">West Bengal (₹300)</option>
+                <option value="andaman-nicobar">Andaman and Nicobar Islands (₹300)</option>
+                <option value="chandigarh">Chandigarh (₹300)</option>
+                <option value="dadra-nagar-haveli-daman-diu">Dadra and Nagar Haveli and Daman and Diu (₹300)</option>
+                <option value="delhi">Delhi (₹300)</option>
+                <option value="jammu-kashmir">Jammu and Kashmir (₹300)</option>
+                <option value="ladakh">Ladakh (₹300)</option>
+                <option value="lakshadweep">Lakshadweep (₹300)</option>
+                <option value="puducherry">Puducherry (₹300)</option>
+            </select>
+            <div id="pickup-option" style="display: none;">
+                <input type="checkbox" id="pickup-checkbox">
+                <label for="pickup-checkbox">Pick up from dealer (₹0 shipping)</label>
+            </div>
+        </div>
+        <div class="address-selection">
+            <label for="shipping-address">Shipping Address:</label>
+            <textarea id="shipping-address" placeholder="Enter your full address" rows="4"></textarea>
+        </div>
+        <div id="cart-items"></div>
+        <div class="cart-total">
+            <h3>Subtotal: ₹<span id="subtotal-price">0.00</span></h3>
+            <h3>Shipping: ₹<span id="shipping-price">300.00</span></h3>
+            <h3>Total: ₹<span id="total-price">0.00</span></h3>
+        </div>
+        <div class="order-buttons">
+            <a href="tel:+919545690700" class="btn call-now">Call to Order</a>
+            <button id="order-now" class="btn order-now">Order Now via WhatsApp</button>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 iTechSolution. All rights reserved.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

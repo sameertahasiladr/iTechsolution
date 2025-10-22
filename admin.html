@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iTechSolution - Admin</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="logo">iTechSolution</div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="products.html">Products</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="cart.html">Cart (<span id="cart-count">0</span>)</a></li>
+                <li id="admin-link"><a href="admin.html">Admin</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div id="login-modal" class="modal">
+        <div class="modal-content">
+            <h2>Admin Login</h2>
+            <form id="login-form">
+                <input type="password" id="admin-password" placeholder="Enter admin password" required>
+                <button type="submit" class="btn">Login</button>
+            </form>
+        </div>
+    </div>
+
+    <section id="admin-section" class="admin-section">
+        <h2>Admin Panel</h2>
+        <button id="logout-btn" class="btn logout-btn">Logout</button>
+        <form id="product-form">
+            <input type="hidden" id="product-id">
+            <input type="text" id="product-name" placeholder="Product Name" required>
+            <input type="file" id="product-image" accept="image/jpeg,image/png,image/gif" required>
+            <img id="image-preview" src="" alt="Image Preview" style="display: none; max-width: 200px; margin-bottom: 1rem;">
+            <input type="number" id="product-price" placeholder="Original Price" step="0.01" required>
+            <input type="number" id="product-discount" placeholder="Discounted Price" step="0.01" required>
+            <textarea id="product-description" placeholder="Product Description" required></textarea>
+            <button type="submit" id="form-submit" class="btn">Add Product</button>
+        </form>
+        <div id="admin-products"></div>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 iTechSolution. All rights reserved.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
