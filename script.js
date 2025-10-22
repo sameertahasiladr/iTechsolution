@@ -380,104 +380,59 @@ function handleOrderNow() {
     }
 }
 
-function handleAdminForm(e) {
-    e.preventDefault();
+function handleOrderNow() {
     try {
-        const id = parseInt(document.getElementById('product-id').value) || null;
-        const name = document.getElementById('product-name').value.trim();
-        const imageInput = document.getElementById('product-image');
-        const price = parseFloat(document.getElementById('product-price').value);
-        const discount = parseFloat(document.getElementById('product-discount').value);
-        const description = document.getElementById('product-description').value.trim();
-        const imagePreview = document.getElementById('image-preview');
-
-        // Input validation
-        if (!name || !description) {
-            throw new Error('Product name and description are required.');
+        if (cart.length === 0) {
+            throw new Error('Cart is empty. Add products to order.');
         }
-        if (isNaN(price) || price <= 0) {
-            throw new Error('Price must be a positive number.');
+        const location = document.getElementById('shipping-location')?.value || 'default';
+        const address = document.getElementById('shipping-address')?.value.trim() || 'Not provided';
+        const pickupCheckbox = document.getElementById('pickup-checkbox');
+        const isPickup = location === 'goa' && pickupCheckbox?.checked;
+        const shippingCharge = getShippingCharge();
+        const formattedLocation = formatLocationName(location);
+        let message = `Hello! I'd like to order:\n`;
+        let subtotal = 0;
+        cart.forEach(item => {
+            const product = products.find(p => p.id === item.id);
+            if (!product) throw new Error(`Product with ID ${item.id} not found.`);
+            message += `Product: ${product.name}\nQuantity: ${item.quantity}\nDiscounted Price: ₹${product.discount.toFixed(2)}\n\n`;
+            subtotal += product.discount * item.quantity;
+        });
+        message += `Subtotal: ₹${subtotal.toFixed(2)}\n`;
+        message += `Shipping Location: ${formattedLocation}\n`;
+        message += `Shipping Address: ${address}\n`;
+        message += `Pickup from Dealer: ${isPickup ? 'Yes' : 'No'}\n`;
+        message += `Shipping Charge: ₹${shippingCharge.toFixed(2)}\n`;
+        message += `Total: ₹${(subtotal + shippingCharge).toFixed(2)}`;
+        const encodedMessage = encodeURIComponent(message);
+        // Detect if on desktop (Windows/Mac) vs. mobile
+        const isMobile = /Android|iPhone|iPad|iPod|webOS|BlackBerry|Windows Phone/i.test(navigator.userAgent);
+        const whatsappBaseUrl = isMobile ? 'https://api.whatsapp.com/send' : 'https://web.whatsapp.com/send';
+        const whatsappUrl = `${whatsappBaseUrl}?phone=919545690700&text=${encodedMessage}`;
+        console.log('WhatsApp URL:', whatsappUrl); // Debug: Log URL to console
+        const whatsappWindow = window.open(whatsappUrl, '_blank');
+        if (!whatsappWindow || whatsappWindow.closed || typeof whatsappWindow.closed == 'undefined') {
+            // Fallback for pop-up blockers
+            const link = document.createElement('a');
+            link.href = whatsappUrl;
+            link.target = '_blank';
+            link.rel = 'noopener noreferrer';
+            link.textContent = 'Click here to open WhatsApp manually';
+            link.style.display = 'block';
+            link.style.marginTop = '10px';
+            link.style.color = '#25D366'; // WhatsApp green
+            document.getElementById('cart-items').appendChild(link);
+            setTimeout(() => link.remove(), 10000); // Remove after 10s
+            showMessage('WhatsApp didn\'t open. Use the link above or copy the URL from the console.', 'error');
         }
-        if (isNaN(discount) || discount <= 0) {
-            throw new Error('Discount price must be a positive number.');
-        }
-        if (discount > price) {
-            throw new Error('Discount price cannot be greater than original price.');
-        }
-
-        const processForm = (imageData) => {
-            if (id) {
-                // Update existing product
-                const product = products.find(p => p.id === id);
-                if (!product) throw new Error('Product not found.');
-                product.name = name;
-                product.image = imageData || product.image; // Keep existing image if none uploaded
-                product.price = price;
-                product.discount = discount;
-                product.description = description;
-                saveProducts();
-                renderAdminProducts();
-                renderProducts('featured-grid', 3);
-                renderProducts('product-grid', productsPerPage, products, currentPage);
-                e.target.reset();
-                document.getElementById('product-id').value = '';
-                document.getElementById('form-submit').textContent = 'Add Product';
-                imagePreview.style.display = 'none';
-                imagePreview.src = '';
-                showMessage('Product updated successfully.', 'success');
-            } else {
-                // Add new product
-                if (!imageData) throw new Error('Image is required for new products.');
-                const newProduct = {
-                    id: products.length ? Math.max(...products.map(p => p.id)) + 1 : 1,
-                    name,
-                    image: imageData,
-                    price,
-                    discount,
-                    description,
-                    category: 'Smartphones' // Default category; requires form modification for dynamic input
-                };
-                products.push(newProduct);
-                saveProducts();
-                renderAdminProducts();
-                renderProducts('featured-grid', 3);
-                renderProducts('product-grid', productsPerPage, products, currentPage);
-                e.target.reset();
-                document.getElementById('product-id').value = '';
-                document.getElementById('form-submit').textContent = 'Add Product';
-                imagePreview.style.display = 'none';
-                imagePreview.src = '';
-                showMessage('Product added successfully.', 'success');
-            }
-        };
-
-        if (imageInput.files && imageInput.files[0]) {
-            const file = imageInput.files[0];
-            const validTypes = ['image/jpeg', 'image/png', 'image/gif'];
-            if (!validTypes.includes(file.type)) {
-                throw new Error('Image must be a .jpg, .jpeg, .png, or .gif file.');
-            }
-            const reader = new FileReader();
-            reader.onload = () => {
-                imagePreview.src = reader.result;
-                imagePreview.style.display = 'block';
-                processForm(reader.result);
-            };
-            reader.onerror = () => {
-                throw new Error('Error reading image file.');
-            };
-            reader.readAsDataURL(file);
-        } else if (id) {
-            // Allow updating without changing the image
-            processForm(null);
-        } else {
-            throw new Error('Image is required for new products.');
-        }
+        clearCart(); // Clear cart after successful order
+        showMessage('Order sent successfully.', 'success');
     } catch (error) {
-        showMessage(error.message || 'Error processing product.', 'error');
+        console.error('Order Error:', error.message); // Debug: Log errors
+        showMessage(error.message || 'Error processing order.', 'error');
     }
 }
-
 function handleAdminActions(e) {
     try {
         if (e.target.classList.contains('delete-product')) {
